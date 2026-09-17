@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Agentic AI Workbench</title>
+    <!-- Google Fonts: Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        google: {
+                            blue: '#4285F4',
+                            red: '#EA4335',
+                            yellow: '#FBBC05',
+                            green: '#34A853',
+                            bg: '#F8F9FA',
+                            surface: '#FFFFFF',
+                            text: '#202124',
+                            subtext: '#5F6368',
+                            border: '#E8EAED',
+                            hover: '#F1F3F4'
+                        }
+                    },
+                    boxShadow: {
+                        'material': '0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15)',
+                        'material-lg': '0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #F8F9FA; color: #202124; }
+        .material-panel { background: #FFFFFF; border-radius: 8px; border: 1px solid #E8EAED; }
+        
+        /* Loading Spinner */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4285F4;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #bdc1c6; }
+    </style>
+</head>
+<body class="h-screen flex flex-col font-sans overflow-hidden">
+
+    <!-- Top Navigation / Status Bar -->
+    <header class="bg-google-surface border-b border-google-border h-16 flex items-center justify-between px-6 shrink-0 shadow-sm z-10">
+        <div class="flex items-center gap-3">
+            <!-- Four-color logo representation -->
+            <div class="flex flex-wrap w-6 h-6 gap-[2px]">
+                <div class="w-[10px] h-[10px] bg-google-red rounded-tl-sm"></div>
+                <div class="w-[10px] h-[10px] bg-google-blue rounded-tr-sm"></div>
+                <div class="w-[10px] h-[10px] bg-google-yellow rounded-bl-sm"></div>
+                <div class="w-[10px] h-[10px] bg-google-green rounded-br-sm"></div>
+            </div>
+            <h1 class="text-xl font-medium text-google-text tracking-tight">Sovereign Agentic AI Workbench</h1>
+            <span class="text-[11px] font-bold bg-google-blue/10 text-google-blue px-2 py-0.5 rounded-full ml-2">PROTOTYPE</span>
+        </div>
+       
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-google-surface border-r border-google-border flex flex-col shrink-0 z-0">
+            <div class="p-4 pt-6 text-xs font-bold text-google-subtext uppercase tracking-wider">Workflows</div>
+            <nav class="flex-1 space-y-1 px-3" id="nav-tabs">
+                <button onclick="switchTab(' w3')" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-r-full rounded-l-md bg-google-blue/10 text-google-blue font-medium text-left transition-colors tab-btn" data-tab="w3">
+                    <i class="fa-solid fa-magnifying-glass w-5 text-center"></i>
+                    <span>W3: Knowledge Search</span>
+                </button>
+                <button onclick="switchTab('w2')" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-r-full rounded-l-md text-google-subtext hover:bg-google-hover hover:text-google-text font-medium text-left transition-colors tab-btn" data-tab="w2">
+                    <i class="fa-solid fa-pen-ruler w-5 text-center"></i>
+                    <span>W2: P&ID Extraction</span>
+                </button>
+                <button onclick="switchTab('w5')" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-r-full rounded-l-md text-google-subtext hover:bg-google-hover hover:text-google-text font-medium text-left transition-colors tab-btn" data-tab="w5">
+                    <i class="fa-solid fa-code w-5 text-center"></i>
+                    <span>W5: Code Execution</span>
+                </button>
+            </nav>
+            
+            <!-- Connection Status -->
+            <div class="p-4 border-t border-google-border m-3 rounded-lg bg-google-bg">
+                <div class="flex items-center gap-2 text-sm">
+                    <div id="api-status-indicator" class="w-2.5 h-2.5 rounded-full bg-google-yellow"></div>
+                    <span id="api-status-text" class="text-google-text font-medium">Connecting...</span>
+                </div>
+                <p class="text-[11px] text-google-subtext mt-1 leading-tight">Backend: http://127.0.0.1:8000</p>
+            </div>
+        </aside>
+
+        <!-- Center Panel: Workflow UI -->
+        <main class="flex-1 flex flex-col bg-google-bg overflow-hidden relative shadow-inner">
+            
+            <!-- W3: Knowledge Investigation -->
+            <div id="w3-panel" class="tab-panel flex-1 flex flex-col h-full max-w-5xl mx-auto w-full pt-8 pb-4 px-8">
+                
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-normal text-google-text">Knowledge Investigation</h2>
+                    <p class="text-google-subtext mt-2">Query the Sovereign Agentic Runtime to search authoritative SOPs and engineering standards.</p>
+                </div>
+                
+                <div class="flex-1 material-panel flex flex-col overflow-hidden shadow-sm">
+                    <div class="flex-1 p-6 overflow-y-auto space-y-6 bg-white" id="chat-history">
+                        <!-- Initial Message -->
+                        <div class="flex gap-4">
+                            <div class="w-9 h-9 rounded-full bg-google-blue/10 flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-robot text-google-blue"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="text-sm font-medium text-google-text mb-1">Sovereign Agent</div>
+                                <div class="text-[15px] text-google-text leading-relaxed">
+                                    I am securely connected to the enterprise knowledge base. You can ask me about:
+                                    <ul class="list-disc ml-5 mt-2 text-google-subtext">
+                                        <li>Pump and valve isolation procedures (Try: "What is required for P-101A diagnostics?")</li>
+                                        <li>Engineering pressure standards (Try: "What is the max pressure for V-100?")</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="p-4 border-t border-google-border bg-white">
+                        <div class="flex gap-3 relative">
+                            <input type="text" id="query-input" placeholder="Ask a question..." class="flex-1 bg-google-bg border border-google-border rounded-full px-6 py-3.5 text-[15px] focus:outline-none focus:border-google-blue focus:ring-1 focus:ring-google-blue transition-shadow text-google-text shadow-inner" onkeypress="handleEnter(event)">
+                            
+                            <button id="execute-btn" onclick="executeWorkflow('W3')" class="bg-google-blue hover:bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-md transition-colors shrink-0">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- W2: P&ID Analysis -->
+            <div id="w2-panel" class="tab-panel hidden flex-1 flex flex-col h-full max-w-5xl mx-auto w-full pt-8 pb-4 px-8">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-normal text-google-text">P&ID Analysis</h2>
+                    <p class="text-google-subtext mt-2">Extract structured engineering entities from technical drawings.</p>
+                </div>
+                
+                <div class="flex-1 material-panel flex flex-col overflow-y-auto p-8 bg-white shadow-sm relative">
+                    <div class="w-24 h-24 bg-google-blue/10 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-file-image text-4xl text-google-blue"></i>
+                    </div>
+                    <h3 class="text-xl font-medium text-google-text">Analyze Engineering Diagram</h3>
+                    <p class="text-google-subtext mt-2 max-w-md">Upload a PDF or image drawing. Results describe visible evidence only and are not an operational validation.</p>
+
+                    <div id="w2-empty" class="mt-6 w-full max-w-2xl mx-auto">
+                        <label for="w2-file" id="w2-drop-zone" class="border-2 border-dashed border-google-border rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer hover:border-google-blue hover:bg-google-hover transition-colors">
+                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-google-blue mb-3"></i>
+                            <span class="font-medium text-google-text">Choose a file or drop it here</span>
+                            <span class="text-xs text-google-subtext mt-2">PDF, PNG, JPG, or JPEG</span>
+                        </label>
+                        <input id="w2-file" type="file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" class="hidden">
+                        <div id="w2-file-info" class="hidden mt-4 flex items-center justify-between bg-google-bg border border-google-border rounded p-3 text-sm">
+                            <span id="w2-filename" class="text-google-text truncate pr-3"></span>
+                            <button id="w2-remove" type="button" class="text-google-red hover:text-red-700" title="Remove selected file"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <button id="w2-analyze" type="button" class="hidden mt-4 w-full bg-google-blue hover:bg-blue-600 text-white font-medium px-6 py-2.5 rounded shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-magnifying-glass mr-2"></i> Analyze File
+                        </button>
+                        <div id="w2-status" role="status" class="mt-4 text-sm text-google-subtext"></div>
+                    </div>
+
+                    <div id="w2-results" class="hidden mt-8 w-full max-w-3xl mx-auto text-left border-t border-google-border pt-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-medium text-google-text">Extraction Results</h4>
+                            <button id="w2-retry" type="button" class="text-sm text-google-blue hover:underline">Retry</button>
+                        </div>
+                        <div id="w2-content" class="space-y-4"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generic Panel -->
+            <div id="generic-panel" class="tab-panel hidden flex-1 flex flex-col h-full items-center justify-center text-center px-6">
+                 <div class="w-20 h-20 bg-google-bg rounded-full flex items-center justify-center mb-4">
+                     <i class="fa-solid fa-lock text-3xl text-google-subtext"></i>
+                 </div>
+                 <h3 class="text-xl font-medium text-google-text">Restricted Workflow</h3>
+                 <p class="text-google-subtext mt-2 max-w-md">This workflow requires developer permissions or is not fully modeled in the current iteration of the backend prototype.</p>
+                 <button onclick="executeWorkflow('W5', 'Execute isolated code')" class="mt-6 bg-google-blue text-white px-4 py-2 rounded shadow-sm hover:bg-blue-600 transition">Test Policy Enforcer (Expect Block)</button>
+            </div>
+
+        </main>
+
+        <!-- Right Panel: Agent Execution Trace -->
+        <aside class="w-80 bg-white border-l border-google-border flex flex-col shrink-0 z-10 shadow-[rgba(0,0,0,0.05)_-4px_0px_8px_0px]">
+            <div class="p-4 border-b border-google-border bg-google-bg flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-google-subtext"></i>
+                <h3 class="font-medium text-google-text">Agent Execution Trace</h3>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-5" id="agent-trace">
+                <div class="text-sm text-google-subtext italic text-center mt-10">
+                    Awaiting task execution...<br>
+                    <span class="text-xs mt-2 block">Connects to FastAPI Backend.</span>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-google-bg border-t border-google-border">
+                <div class="text-xs text-google-subtext">
+                    <strong>Evidence Governed:</strong> <span id="evidence-count" class="text-google-text font-bold">0</span> artifacts loaded in runtime.
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        // Check API Status on load
+        async function checkApiStatus() {
+            try {
+                const res = await fetch('http://127.0.0.1:8000/api/v1/health');
+                if (res.ok) {
+                    document.getElementById('api-status-indicator').className = 'w-2.5 h-2.5 rounded-full bg-google-green';
+                    document.getElementById('api-status-text').innerText = 'Connected to Local API';
+                }
+            } catch (err) {
+                document.getElementById('api-status-indicator').className = 'w-2.5 h-2.5 rounded-full bg-google-red';
+                document.getElementById('api-status-text').innerText = 'Backend Offline (Run run.bat)';
+            }
+        }
+        checkApiStatus();
+        setInterval(checkApiStatus, 5000);
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-google-blue/10', 'text-google-blue');
+                btn.classList.add('text-google-subtext');
+                if (btn.dataset.tab === tabId) {
+                    btn.classList.add('bg-google-blue/10', 'text-google-blue');
+                    btn.classList.remove('text-google-subtext');
+                }
+            });
+
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.add('hidden'));
+            
+            if (tabId === 'w3') {
+                document.getElementById('w3-panel').classList.remove('hidden');
+            } else if (tabId === 'w2') {
+                document.getElementById('w2-panel').classList.remove('hidden');
+            } else {
+                document.getElementById('generic-panel').classList.remove('hidden');
+            }
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                executeWorkflow('W3');
+            }
+        }
+
+        const W2_MAX_FILE_BYTES = 25 * 1024 * 1024;
+        const W2_ALLOWED_TYPES = new Set(['application/pdf', 'image/png', 'image/jpeg']);
+        let selectedW2File = null;
+
+        function renderTrace(trace) {
+            const container = document.getElementById('agent-trace');
+            container.replaceChildren();
+            for (const item of (trace || [])) {
+                const type = String(item).split(':')[0];
+                const content = String(item).substring(type.length + 1).trim();
+                const row = document.createElement('div');
+                row.className = 'mb-4 flex gap-3';
+                const icon = document.createElement('div');
+                icon.className = 'mt-1 w-5 flex justify-center shrink-0 text-google-blue';
+                icon.textContent = type === 'ACTION' ? '>' : type === 'RESULT' ? '*' : '-';
+                const body = document.createElement('div');
+                const heading = document.createElement('div');
+                heading.className = 'text-[11px] font-bold text-google-blue';
+                heading.textContent = type;
+                const message = document.createElement('div');
+                message.className = 'text-[13px] text-google-text mt-0.5 leading-snug';
+                message.textContent = content;
+                body.append(heading, message);
+                row.append(icon, body);
+                container.append(row);
+            }
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function displayW2Results(data) {
+            const content = document.getElementById('w2-content');
+            content.replaceChildren();
+            const result = data.result || {};
+            const summary = document.createElement('p');
+            summary.className = 'text-sm text-google-text';
+            summary.textContent = `${result.summary || 'No summary returned.'} Status: ${data.status || 'UNKNOWN'}`;
+            content.append(summary);
+            const warnings = document.createElement('div');
+            warnings.className = 'p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-900';
+            warnings.textContent = data.warnings && data.warnings.length ? data.warnings.join(' ') : 'No warnings returned.';
+            content.append(warnings);
+            const entities = document.createElement('div');
+            entities.className = 'space-y-2';
+            const title = document.createElement('h5');
+            title.className = 'font-medium text-google-text';
+            title.textContent = `Entities (${(result.entities || []).length})`;
+            entities.append(title);
+            for (const entity of (result.entities || [])) {
+                const item = document.createElement('div');
+                item.className = 'bg-google-bg border border-google-border rounded p-3 text-sm';
+                item.textContent = `${entity.entity_type || 'entity'} ${entity.tag || ''}: ${entity.description || ''} | ${entity.evidence_text || 'No evidence text'} | confidence ${entity.confidence ?? 'unknown'}${entity.page ? ` | page ${entity.page}` : ''}`;
+                entities.append(item);
+            }
+            content.append(entities);
+            const evidence = document.createElement('details');
+            evidence.className = 'text-sm';
+            const summaryElement = document.createElement('summary');
+            summaryElement.className = 'cursor-pointer font-medium text-google-blue';
+            summaryElement.textContent = `Source evidence (${(data.evidence || []).length})`;
+            evidence.append(summaryElement);
+            for (const source of (data.evidence || [])) {
+                const block = document.createElement('p');
+                block.className = 'mt-2 p-2 bg-google-bg rounded text-google-text whitespace-pre-wrap';
+                block.textContent = `${source.source || 'source'}${source.page ? `, page ${source.page}` : ''}: ${source.evidence_text || ''}`;
+                evidence.append(block);
+            }
+            content.append(evidence);
+        }
+
+        function showW2Error(message) {
+            const status = document.getElementById('w2-status');
+            status.className = 'mt-4 text-sm text-google-red';
+            status.textContent = message;
+            document.getElementById('w2-results').classList.remove('hidden');
+            document.getElementById('w2-content').replaceChildren();
+        }
+
+        function selectW2File(file) {
+            if (!file) return;
+            if (!W2_ALLOWED_TYPES.has(file.type) || !['.pdf', '.png', '.jpg', '.jpeg'].some(ext => file.name.toLowerCase().endsWith(ext))) {
+                showW2Error('Unsupported file type. Choose a PDF, PNG, JPG, or JPEG file.');
+                return;
+            }
+            if (file.size === 0) { showW2Error('The selected file is empty.'); return; }
+            if (file.size > W2_MAX_FILE_BYTES) { showW2Error('The selected file exceeds the 25 MB limit.'); return; }
+            selectedW2File = file;
+            document.getElementById('w2-filename').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            document.getElementById('w2-file-info').classList.remove('hidden');
+            document.getElementById('w2-analyze').classList.remove('hidden');
+            document.getElementById('w2-status').textContent = 'Ready to analyze.';
+        }
+
+        function resetW2() {
+            selectedW2File = null;
+            document.getElementById('w2-file').value = '';
+            document.getElementById('w2-file-info').classList.add('hidden');
+            document.getElementById('w2-analyze').classList.add('hidden');
+            document.getElementById('w2-results').classList.add('hidden');
+            document.getElementById('w2-status').textContent = '';
+        }
+
+        document.getElementById('w2-file').addEventListener('change', event => selectW2File(event.target.files[0]));
+        document.getElementById('w2-remove').addEventListener('click', resetW2);
+        document.getElementById('w2-retry').addEventListener('click', () => document.getElementById('w2-file').click());
+        const dropZone = document.getElementById('w2-drop-zone');
+        ['dragenter', 'dragover'].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); dropZone.classList.add('border-google-blue'); }));
+        ['dragleave', 'drop'].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); dropZone.classList.remove('border-google-blue'); }));
+        dropZone.addEventListener('drop', event => selectW2File(event.dataTransfer.files[0]));
+        document.getElementById('w2-analyze').addEventListener('click', analyzeW2File);
+
+        async function analyzeW2File() {
+            if (!selectedW2File) return;
+            const button = document.getElementById('w2-analyze');
+            const status = document.getElementById('w2-status');
+            button.disabled = true;
+            status.className = 'mt-4 text-sm text-google-blue';
+            status.textContent = 'Uploading and analyzing: 0%';
+            try {
+                const form = new FormData();
+                form.append('file', selectedW2File);
+                form.append('security_context', JSON.stringify({ user_identity: 'engineer_01', role: 'engineer', data_permissions: ['standard'], tool_permissions: ['search_knowledge_base', 'extract_pid_entities'] }));
+                const data = await new Promise((resolve, reject) => {
+                    const request = new XMLHttpRequest();
+                    request.open('POST', 'http://127.0.0.1:8000/api/v1/workflows/w2/analyze');
+                    request.upload.onprogress = event => { if (event.lengthComputable) status.textContent = `Uploading and analyzing: ${Math.round(event.loaded / event.total * 100)}%`; };
+                    request.onload = () => { let body = {}; try { body = JSON.parse(request.responseText); } catch (_) {} request.status >= 200 && request.status < 300 ? resolve(body) : reject(new Error(body.detail || 'The backend rejected the upload.')); };
+                    request.onerror = () => reject(new Error('Failed to connect to backend. Ensure run.bat is running.'));
+                    request.send(form);
+                });
+                renderTrace(data.trace);
+                document.getElementById('evidence-count').textContent = (data.evidence || []).length;
+                document.getElementById('w2-results').classList.remove('hidden');
+                displayW2Results(data);
+                status.textContent = 'Analysis complete.';
+            } catch (error) {
+                showW2Error(error.message);
+            } finally { button.disabled = false; }
+        }
+
+        async function executeWorkflow(workflowClass) {
+            const input = document.getElementById('query-input');
+            const query = input.value.trim() || (workflowClass === 'W5' ? 'Execute isolated code' : '');
+            if (!query) return;
+            if (workflowClass === 'W5') {
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/api/v1/task/execute', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_request: query, workflow_class: 'W5', security_context: { user_identity: 'engineer_01', role: 'engineer', data_permissions: ['standard'], tool_permissions: ['search_knowledge_base'] } }) });
+                    const data = await response.json();
+                    renderTrace(data.trace);
+                    document.getElementById('evidence-count').textContent = (data.evidence || []).length;
+                } catch (error) { renderTrace([`RESULT: ${error.message}`]); }
+                return;
+            }
+            const chat = document.getElementById('chat-history');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'flex gap-4 justify-end mt-4';
+            const text = document.createElement('div');
+            text.className = 'bg-google-bg border border-google-border rounded-lg p-3 text-[15px] text-google-text';
+            text.textContent = query;
+            userMessage.append(text);
+            chat.append(userMessage);
+            input.value = '';
+            input.disabled = true;
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/v1/task/execute', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_request: query, workflow_class: 'W3', security_context: { user_identity: 'engineer_01', role: 'engineer', data_permissions: ['standard'], tool_permissions: ['search_knowledge_base', 'extract_pid_entities'] } }) });
+                const data = await response.json();
+                renderTrace(data.trace);
+                document.getElementById('evidence-count').textContent = (data.evidence || []).length;
+                const responseMessage = document.createElement('div');
+                responseMessage.className = 'mt-4 p-4 bg-white border border-google-border rounded-lg text-[15px] text-google-text whitespace-pre-wrap';
+                responseMessage.textContent = `${data.result || 'No result generated.'}\n\nStatus: ${data.status}${data.reason ? `\n${data.reason}` : ''}`;
+                chat.append(responseMessage);
+                chat.scrollTop = chat.scrollHeight;
+            } catch (error) { renderTrace([`RESULT: ${error.message}`]); }
+            finally { input.disabled = false; input.focus(); }
+        }
+    </script>
+</body>
+</html>

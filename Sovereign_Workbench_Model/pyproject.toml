@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sovereign-workbench-model"
+version = "0.1.0"
+description = "Deterministic, offline reference model for the Sovereign Agentic AI Workbench"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "pydantic>=2.10,<3",
+    "uvicorn>=0.34,<1",
+    "python-multipart>=0.0.20,<1",
+    "pypdf>=5.4,<6",
+    "Pillow>=11.1,<12",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10", "httpx>=0.28,<1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+include = ["workbench_model*"]
