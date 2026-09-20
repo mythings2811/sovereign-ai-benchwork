@@ -786,17 +786,6 @@ complete.
 -   Architecture is defined sufficiently to proceed into engineering
 work, while technology selection is intentionally not treated as frozen.
 
-### What must not be inferred
-
-The supplied description does **not** establish that:
-
--   all planned workflows are fully implemented;
--   the system has passed end-to-end acceptance testing;
--   zero-egress has been empirically demonstrated;
--   sandbox escape resistance has been qualified;
--   a specific model list is finalized and validated;
--   production deployment or regulatory certification has been achieved.
-
 ### Status vocabulary
 
 Use these terms consistently:
@@ -816,6 +805,6 @@ Update this section as repository code and test evidence evolve.
 
 ## Contact
 
--   Project / team: `AEGIS`
--   Repository issues: `https://github.com/mythings2811/sovereign-ai-benchwork/issues`
+-   Team: `AEGIS`
+-   Repository issues:Issues[https://github.com/mythings2811/sovereign-ai-benchwork/issues]
 
