@@ -1,0 +1,11 @@
+User,market,competitor research - Shreya
+
+data and knowledge research - shruti
+
+local ai, models and model routing - Abhishek 
+
+Agent runtime, tools and coding execution - raviteja
+
+RAG, Multi-modal ai and document intelligence - vikaskumar
+
+Security, sovereignity and failure research-samarth

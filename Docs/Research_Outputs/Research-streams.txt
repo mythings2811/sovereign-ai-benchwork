@@ -1,0 +1,119 @@
+Research streams
+R1 — User research
+
+User behavior
+Pain points
+Existing workflows
+User expectations
+
+R2 — Market research
+
+Market size
+Trends
+Adoption
+Industry constraints
+
+R3 — Competitor research
+
+Direct competitors
+Indirect alternatives
+Feature comparison
+Pricing/business models
+
+R4 — Technical research
+
+Existing APIs
+Libraries
+AI models
+Infrastructure options
+Feasibility
+
+R5 — Failure research
+
+Why existing solutions fail
+User complaints
+Known limitations
+
+R6 — Innovation research
+
+New approaches
+Recent technology
+Novel mechanisms
+
+R7 — Data research
+
+Available datasets
+Data sources
+Data quality
+Data volume
+
+R8 — Regulatory/security research
+
+Compliance
+Privacy
+Security constraints
+
+R9 — Economic / Unit Economics Research
+
+You need to determine whether ST can actually make money.
+
+Research:
+
+Cost per evaluation
+Cost of running validation
+Cost of LLM-as-a-judge
+Cost of sandbox execution
+Expected claim frequency
+Expected claim severity
+Reserve requirement
+Premium / transaction fee
+Gross margin
+Customer acquisition cost
+Customer lifetime value
+Fraud/abuse cost
+Maximum liability per customer
+Expected loss ratio
+Break-even claim rate
+R10 — Evaluation Science Research
+
+This deserves its own stream rather than being buried inside technical research.
+
+Research:
+
+What does "bad AI output" actually mean?
+How can requirement satisfaction be measured?
+How accurately can automated evaluators detect failure?
+False positives
+False negatives
+LLM-as-a-judge reliability
+Human-vs-AI evaluation
+Ground-truth construction
+Code correctness
+Requirement traceability
+Multi-dimensional evaluation
+Evaluation calibration
+
+LLM-as-a-judge cannot simply be assumed to be reliable. Research has documented biases and vulnerabilities in both human and LLM judges.
+
+R11 — Abuse / Adversarial Research
+
+This is critical because ST potentially pays users when AI output fails.
+
+Research:
+
+Claim fraud
+Intentional bad requirements
+Intentionally impossible requirements
+Prompt manipulation
+False dissatisfaction
+Repeated claim attempts
+Evaluation gaming
+Token farming
+Replay attacks
+Sandbox escape
+Malicious code
+Prompt injection
+Agent manipulation
+Claim collusion
+
+OWASP's current GenAI security work explicitly identifies risks such as prompt injection, improper output handling, excessive agency, misinformation and unbounded consumption
